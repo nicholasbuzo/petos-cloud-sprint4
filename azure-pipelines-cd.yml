@@ -54,9 +54,10 @@ steps:
       runtimeStack: JAVA|21-java21
 
   - bash: |
-      url="https://$(webAppName).azurewebsites.net/login"
+      # Durante a troca de versão, a instância antiga ainda responde /login, mas falha nos arquivos estáticos
+      url="https://$(webAppName).azurewebsites.net"
       for attempt in $(seq 1 30); do
-        if curl -fsS -m 20 -o /dev/null "$url"; then
+        if curl -fsS -m 20 -o /dev/null "$url/login" && curl -fsS -m 20 -o /dev/null "$url/css/petos.css"; then
           echo "Aplicação respondeu na tentativa $attempt: $url"
           exit 0
         fi
