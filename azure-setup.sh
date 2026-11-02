@@ -52,8 +52,8 @@ echo "Liberando o IP atual para consultar o banco >>>"
 MY_IP=$(curl -s https://api.ipify.org)
 az postgres flexible-server firewall-rule create \
   --resource-group $RESOURCE_GROUP_NAME \
-  --name $PG_SERVER_NAME \
-  --rule-name AllowCurrentIp \
+  --server-name $PG_SERVER_NAME \
+  --name AllowCurrentIp \
   --start-ip-address "$MY_IP" \
   --end-ip-address "$MY_IP"
 
