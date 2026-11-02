@@ -14,7 +14,7 @@ resources:
             - master
 
 pool:
-  vmImage: ubuntu-latest
+  name: Default
 
 variables:
   - group: petos-secrets

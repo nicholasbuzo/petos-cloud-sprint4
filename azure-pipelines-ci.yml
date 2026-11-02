@@ -9,7 +9,7 @@ trigger:
 pr: none
 
 pool:
-  vmImage: ubuntu-latest
+  name: Default
 
 variables:
   pomFile: project/pom.xml
@@ -35,7 +35,7 @@ steps:
       goals: package
       options: -B -DskipTests
       javaHomeOption: Path
-      jdkDirectory: $(JAVA_HOME_21_X64)
+      jdkDirectory: /usr/lib/jvm/java-21-openjdk
       publishJUnitResults: false
 
   - task: CopyFiles@2
