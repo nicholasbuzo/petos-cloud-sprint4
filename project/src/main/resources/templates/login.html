@@ -5,6 +5,6 @@
 <div th:replace="~{fragments/layout :: messages}"></div>
 <p th:if="${param.error}" role="alert" class="notice error">E-mail ou senha inválidos. Confira seus dados e tente novamente.</p>
 <p th:if="${param.logout}" role="status" class="notice success">Você saiu com segurança. Até o próximo cuidado!</p>
-<form th:action="@{/login}" method="post"><label class="field">E-mail *<input name="email" type="email" required maxlength="150" autocomplete="username" placeholder="voce@exemplo.com"></label><label class="field">Senha *<input name="password" type="password" required autocomplete="current-password"></label><button class="button full" type="submit">Entrar no PetOS agora</button></form>
+<form th:action="@{/login}" method="post"><label class="field">E-mail *<input name="email" type="email" required maxlength="150" autocomplete="username" placeholder="voce@exemplo.com"></label><label class="field">Senha *<input name="password" type="password" required autocomplete="current-password"></label><button class="button full" type="submit">Entrar no PetOS</button></form>
 <p class="auth-switch">Primeira visita? <a th:href="@{/cadastro}">Criar conta</a></p></div></section></main></body></html>
 
