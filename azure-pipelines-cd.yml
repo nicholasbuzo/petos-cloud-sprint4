@@ -1,0 +1,68 @@
+# CD do PetOS: dispara quando a pipeline "petos-ci" conclui e gera um novo artefato.
+# Os dados sensíveis vêm do Variable Group "petos-secrets" (variáveis marcadas como secretas).
+
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: ci
+      source: petos-ci
+      trigger:
+        branches:
+          include:
+            - master
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: petos-secrets
+  - name: azureSubscription
+    value: petos-azure
+  - name: resourceGroup
+    value: rg-petos
+  - name: webAppName
+    value: petos-561082
+
+steps:
+  - download: ci
+    displayName: Baixar artefato gerado pelo CI
+    artifact: petos-app
+
+  - task: AzureAppServiceSettings@1
+    displayName: Aplicar variáveis protegidas no Web App
+    inputs:
+      azureSubscription: $(azureSubscription)
+      appName: $(webAppName)
+      resourceGroupName: $(resourceGroup)
+      appSettings: |
+        [
+          { "name": "SPRING_DATASOURCE_URL", "value": "$(SPRING_DATASOURCE_URL)", "slotSetting": false },
+          { "name": "SPRING_DATASOURCE_USERNAME", "value": "$(SPRING_DATASOURCE_USERNAME)", "slotSetting": false },
+          { "name": "SPRING_DATASOURCE_PASSWORD", "value": "$(SPRING_DATASOURCE_PASSWORD)", "slotSetting": false },
+          { "name": "PETOS_JWT_SECRET", "value": "$(PETOS_JWT_SECRET)", "slotSetting": false }
+        ]
+
+  - task: AzureWebApp@1
+    displayName: Fazer deploy no Azure Web App
+    inputs:
+      azureSubscription: $(azureSubscription)
+      appType: webAppLinux
+      appName: $(webAppName)
+      package: $(Pipeline.Workspace)/ci/petos-app/*.jar
+      runtimeStack: JAVA|21-java21
+
+  - bash: |
+      url="https://$(webAppName).azurewebsites.net/login"
+      for attempt in $(seq 1 30); do
+        if curl -fsS -m 20 -o /dev/null "$url"; then
+          echo "Aplicação respondeu na tentativa $attempt: $url"
+          exit 0
+        fi
+        echo "Tentativa $attempt: aplicação ainda não respondeu"
+        sleep 20
+      done
+      echo "##vso[task.logissue type=error]A aplicação não respondeu após o deploy"
+      exit 1
+    displayName: Verificar se a aplicação subiu

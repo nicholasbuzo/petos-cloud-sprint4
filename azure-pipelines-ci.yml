@@ -1,0 +1,52 @@
+# CI do PetOS: compila, executa os testes e publica o artefato.
+# No Azure DevOps, esta pipeline deve se chamar "petos-ci" (o CD depende desse nome).
+
+trigger:
+  branches:
+    include:
+      - master
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  pomFile: project/pom.xml
+  artifactName: petos-app
+
+steps:
+  - task: Maven@4
+    displayName: Executar testes automatizados
+    inputs:
+      mavenPomFile: $(pomFile)
+      goals: clean test
+      options: -B
+      javaHomeOption: Path
+      jdkDirectory: $(JAVA_HOME_21_X64)
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      testRunTitle: Testes PetOS
+
+  - task: Maven@4
+    displayName: Gerar o jar da aplicação
+    inputs:
+      mavenPomFile: $(pomFile)
+      goals: package
+      options: -B -DskipTests
+      javaHomeOption: Path
+      jdkDirectory: $(JAVA_HOME_21_X64)
+      publishJUnitResults: false
+
+  - task: CopyFiles@2
+    displayName: Separar o jar para publicação
+    inputs:
+      sourceFolder: project/target
+      contents: '*.jar'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publicar artefato no Azure DevOps
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+      artifact: $(artifactName)
