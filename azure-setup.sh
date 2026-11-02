@@ -15,7 +15,10 @@ PG_SERVER_NAME="pg-petos-561082"
 PG_DB_NAME="petosdb"
 
 # Credenciais informadas no terminal, nunca versionadas:
-#   PG_ADMIN_USER="..." PG_ADMIN_PASSWORD="$(openssl rand -hex 24)" ./azure-setup.sh
+#   export PG_ADMIN_USER="..."
+#   export PG_ADMIN_PASSWORD="$(openssl rand -hex 24)"
+#   echo "$PG_ADMIN_PASSWORD" # guarde este valor para o Variable Group
+#   ./azure-setup.sh
 : "${PG_ADMIN_USER:?Defina PG_ADMIN_USER antes de executar}"
 : "${PG_ADMIN_PASSWORD:?Defina PG_ADMIN_PASSWORD antes de executar}"
 

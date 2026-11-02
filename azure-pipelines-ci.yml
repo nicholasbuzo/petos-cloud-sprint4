@@ -23,7 +23,7 @@ steps:
       goals: clean test
       options: -B
       javaHomeOption: Path
-      jdkDirectory: $(JAVA_HOME_21_X64)
+      jdkDirectory: /usr/lib/jvm/java-21-openjdk
       publishJUnitResults: true
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       testRunTitle: Testes PetOS

@@ -72,7 +72,10 @@ A aplicação roda em **Azure Web App (Linux, Java 21, plano B1)** com **Azure D
 Execute `azure-setup.sh` com as credenciais informadas no terminal (elas não são versionadas):
 
 ```bash
-PG_ADMIN_USER="petosadmin" PG_ADMIN_PASSWORD="$(openssl rand -hex 24)" ./azure-setup.sh
+export PG_ADMIN_USER="petosadmin"
+export PG_ADMIN_PASSWORD="$(openssl rand -hex 24)"
+echo "$PG_ADMIN_PASSWORD" # guarde este valor para o Variable Group
+./azure-setup.sh
 ```
 
 O script cria o Resource Group, o PostgreSQL com o banco `petosdb`, o Application Insights, o App Service Plan e o Web App. Para remover tudo: `./azure-delete.sh`.
