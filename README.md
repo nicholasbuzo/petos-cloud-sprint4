@@ -91,33 +91,6 @@ Os arquivos YAML ficam na raiz do repositório e são conectados à branch `mast
 
 Os testes do CI usam H2 em memória (perfil `test`), portanto o CI não recebe credenciais do banco de produção.
 
-### Configuração no Azure DevOps
-
-1. **Projeto:** nome `Sprint 4 – Azure DevOps`, visibilidade Private, Git, processo Scrum ou Agile. Convide o professor com acesso **Basic**.
-2. **Service connection:** crie uma do tipo Azure Resource Manager chamada `petos-azure`, com escopo no Resource Group `rg-petos`, e uma conexão com o GitHub.
-3. **Variable Group:** em Pipelines → Library, crie `petos-secrets` e marque todas as variáveis como secretas:
-
-| Variável | Valor |
-|---|---|
-| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://pg-petos-561082.postgres.database.azure.com:5432/petosdb?sslmode=require` |
-| `SPRING_DATASOURCE_USERNAME` | Valor usado em `PG_ADMIN_USER` |
-| `SPRING_DATASOURCE_PASSWORD` | Valor usado em `PG_ADMIN_PASSWORD` |
-| `PETOS_JWT_SECRET` | Resultado de `openssl rand -hex 32` |
-
-4. **Pipelines:** crie `petos-ci` a partir de `azure-pipelines-ci.yml` e `petos-cd` a partir de `azure-pipelines-cd.yml`, ambas com `master` como branch padrão. Os nomes precisam ser exatamente esses. Na primeira execução do CD, autorize o acesso ao Variable Group e à service connection.
-
-### Evidência de CRUD no banco
-
-Na interface da aplicação ou no Swagger, faça cada operação e, em seguida, rode [`evidencias-crud.sql`](./evidencias-crud.sql) no PostgreSQL da Azure para mostrar o resultado:
-
-| Operação | Requisição |
-|---|---|
-| Preparação | `POST /auth/register` com perfil `TUTOR`, depois **Authorize** com o token e `POST /pets` |
-| Create | `POST /routines` com `{"petId": <id>, "type": "VET_VISIT", "description": "Consulta", "recordDate": "<data de hoje>"}` |
-| Read | `GET /routines/{id}` |
-| Update | `PUT /routines/{id}` alterando `description` |
-| Delete | `DELETE /routines/{id}` |
-
 ### Variáveis em produção (App Settings do Web App)
 
 | Variável | Origem |
@@ -307,7 +280,7 @@ Disponível somente com o profile `dev`, rodando localmente:
 
 ## Vídeo explicativo
 
-Link do vídeo da Sprint 4: *inserir antes da entrega.*
+[![Apresentação PetOS - Sprint 3 - Cloud & DevOps - 2TDSPO](https://img.youtube.com/vi/sNwL5Sq6yFE/maxresdefault.jpg)](https://youtu.be/sNwL5Sq6yFE)
 
 ---
 
