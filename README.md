@@ -91,6 +91,48 @@ Os arquivos YAML ficam na raiz do repositório e são conectados à branch `mast
 
 Os testes do CI usam H2 em memória (perfil `test`), portanto o CI não recebe credenciais do banco de produção.
 
+### Agente das pipelines (self-hosted)
+
+As duas pipelines rodam em um agente próprio (`azagent`), registrado no pool `Default` do Azure DevOps, porque a organização não usa agentes hospedados pela Microsoft. O agente executa apenas as etapas de CI/CD em uma máquina Linux da equipe; a aplicação e o banco continuam na Azure.
+
+#### Pré-requisitos da máquina
+
+- Linux x64 com acesso à internet.
+- JDK 21 em `/usr/lib/jvm/java-21-openjdk`, caminho definido em `jdkDirectory` no `azure-pipelines-ci.yml`. Em outro caminho, ajuste o arquivo.
+- Maven no `PATH` e a biblioteca ICU. No Arch Linux: `sudo pacman -S --needed maven icu`.
+
+#### Instalação
+
+1. No Azure DevOps, crie um Personal Access Token em **User settings → Personal access tokens**, com o escopo **Agent Pools: Read & manage**. Não versione esse token.
+2. Em **Organization settings → Agent pools → Default → New agent → Linux**, baixe o pacote do agente.
+3. Extraia o pacote e execute a configuração:
+
+   ```bash
+   mkdir ~/azagent && cd ~/azagent
+   tar zxvf ~/Downloads/vsts-agent-linux-x64-*.tar.gz
+   ./config.sh
+   ```
+
+4. Responda ao `config.sh`:
+
+   | Pergunta | Resposta |
+   |---|---|
+   | Server URL | `https://dev.azure.com/<organização>` |
+   | Authentication type | `PAT`, informando o token |
+   | Agent pool | `Default` |
+   | Demais perguntas | Enter, para aceitar o padrão |
+
+#### Execução
+
+```bash
+cd ~/azagent
+./run.sh
+```
+
+O agente deve aparecer como **Online** em **Agent pools → Default → Agents**. O terminal precisa ficar aberto enquanto as pipelines forem executadas; com o agente offline, as execuções ficam na fila até ele voltar. Na primeira execução, autorize o acesso ao pool `Default` se o Azure DevOps pedir permissão.
+
+Para usar agentes hospedados pela Microsoft, troque nos dois YAML `name: Default` por `vmImage: ubuntu-latest` e, no CI, use `$(JAVA_HOME_21_X64)` em `jdkDirectory`.
+
 ### Variáveis em produção (App Settings do Web App)
 
 | Variável | Origem |
