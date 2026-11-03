@@ -21,7 +21,7 @@ O PetOS é uma aplicação web (Java 21 + Spring Boot) que centraliza o históri
 
 ## 🏗️ Arquitetura
 
-![Arquitetura e fluxo de CI/CD](arquitetura-sprint4.png)
+![Arquitetura e fluxo de CI/CD](sprint-diagram.png)
 
 ```
 project/
@@ -104,12 +104,6 @@ O perfil `prod` não cria contas de demonstração nem dados de exemplo e não h
 ### Conectando ao banco pelo VS Code
 
 Para rodar scripts `.sql` direto contra o Postgres do Azure, use a extensão **PostgreSQL** da Microsoft (`ms-ossdata.vscode-pgsql`) — não a extensão **SQL Server (mssql)**, que fala um protocolo diferente e não conecta. Dados de conexão: host e porta do servidor Postgres, banco `petosdb`, usuário/senha informados em `PG_ADMIN_USER`/`PG_ADMIN_PASSWORD` ao executar o `azure-setup.sh`, SSL mode `Require`.
-
-### Testando a API autenticada (Postman)
-
-1. `POST /auth/login` com `{"email": "...", "password": "..."}` → a resposta traz `token` (JWT) e `tokenType: Bearer`.
-2. Nas demais requisições, use a aba **Authorization → Bearer Token** do Postman com esse token (equivale ao header `Authorization: Bearer <token>`).
-3. Sem usuário ainda? Use `POST /auth/register` primeiro — já devolve o token, sem precisar logar depois.
 
 ### Acesso, login e perfis
 
