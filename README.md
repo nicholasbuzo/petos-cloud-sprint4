@@ -316,7 +316,7 @@ Disponível somente com o profile `dev`, rodando localmente:
 
 ## Vídeo explicativo
 
-[![Apresentação PetOS - Sprint 3 - Cloud & DevOps - 2TDSPO](https://img.youtube.com/vi/sNwL5Sq6yFE/maxresdefault.jpg)](https://youtu.be/sNwL5Sq6yFE)
+[![Apresentação PetOS - Sprint 4 - Cloud & DevOps - 2TDSPO](https://img.youtube.com/vi/sNwL5Sq6yFE/maxresdefault.jpg)](https://youtu.be/sNwL5Sq6yFE)
 
 ---
 
